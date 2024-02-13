@@ -4,10 +4,10 @@ module uart_transmitter #(
     parameter CLK_FREQ = 1843200
 )(
     input logic clk, rst,       // system clock and active low reset
-    input logic tx_start,       // active high start transmission
+    input logic tx_start,       // active high, start transmission
     input logic [7:0] tx_data,  // data to transmit
     output logic tx,            // serial data output
-    output logic busy,          // active high device is busy
+    output logic busy,          // active high, device is busy
     input uart_config_t uart_config
 );
 
@@ -42,7 +42,7 @@ always_comb begin
     default:        stop_cycles = cycles_per_bit;
     endcase
     
-    data_bits = uart_config.data_bits + 5; // data_bits_t enum starts with 5, so adding 5 gets the actual value
+    data_bits = uart_config.data_bits + 5; // data_bits_t enum starts with 5
 end
 
 always_ff @(posedge clk) begin
@@ -76,9 +76,9 @@ always_ff @(posedge clk) begin
                     counter <= counter + 1;
                 end else begin
                     parity_bit <= parity_bit ^ current_bit; // flip parity bit with new '1'
+                    counter <= 0;
                     if (bit_index < data_bits - 1) begin
                         bit_index <= bit_index + 1; // index next data bit
-                        counter <= 0;
                     end else begin
                         if (uart_config.parity == PARITY_NONE) begin
                             tx <= 1'b1; // set tx to 1 for stop bit
@@ -87,7 +87,6 @@ always_ff @(posedge clk) begin
                             tx <= parity_bit ^ current_bit; // set tx to parity bit
                             state <= PARITY;
                         end
-                        counter <= 0;
                     end
                 end
             end
@@ -111,6 +110,6 @@ always_ff @(posedge clk) begin
     end
 end
 
-assign busy = (state != IDLE);
+assign busy = (state != IDLE); // indicate busy if not in IDLE state
 
 endmodule
