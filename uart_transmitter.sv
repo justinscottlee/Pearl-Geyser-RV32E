@@ -3,7 +3,7 @@
 module uart_transmitter #(
     parameter CLK_FREQ = 1843200
 )(
-    input logic clk, rst,       // system clock and active low reset
+    input logic clk, rst_n,       // system clock and active low reset
     input logic tx_start,       // active high, start transmission
     input logic [7:0] tx_data,  // data to transmit
     output logic tx,            // serial data output
@@ -46,7 +46,7 @@ always_comb begin
 end
 
 always_ff @(posedge clk) begin
-    if (!rst) begin
+    if (!rst_n) begin
         tx <= 1'b1; // set tx to 1 for idle
         state <= IDLE;
     end else begin
@@ -70,7 +70,7 @@ always_ff @(posedge clk) begin
             end
             DATA: begin
                 // extract current bit from tx_data based on MSB/LSB-first
-                automatic bit current_bit = uart_config.lsb_first ? tx_data[bit_index] : tx_data[data_bits - 1 - bit_index];
+                automatic bit current_bit = (uart_config.bit_order == LSB_FIRST) ? tx_data[bit_index] : tx_data[data_bits - 1 - bit_index];
                 tx <= current_bit; // set tx to current data bit
                 if (counter < cycles_per_bit - 1) begin
                     counter <= counter + 1;

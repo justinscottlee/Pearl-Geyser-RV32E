@@ -1,7 +1,9 @@
+`include "defines.vh"
+
 module uart_receiver #(
     parameter CLK_FREQ = 1843200
 )(
-    input logic clk, rst,       // system clock and active low reset
+    input logic clk, rst_n,       // system clock and active low reset
     input logic rx,             // serial data input
     input logic clear_rx_ready, // active high, clear the rx_ready signal after the data has been read
     output logic rx_ready,      // active high, received data is ready to be read
@@ -46,7 +48,7 @@ always_comb begin
 end
 
 always_ff @(posedge clk) begin
-    if (!rst) begin
+    if (!rst_n) begin
         // reset all outputs and enter idle state
         rx_ready <= 1'b0;
         frame_error <= 1'b0;
@@ -82,7 +84,7 @@ always_ff @(posedge clk) begin
                 if (counter < cycles_per_bit - 1) begin
                     counter <= counter + 1;
                 end else begin
-                    rx_data[uart_config.lsb_first ? bit_index : (data_bits - bit_index - 1)] <= rx; // insert next data bit into rx_data
+                    rx_data[(uart_config.bit_order == LSB_FIRST) ? bit_index : (data_bits - bit_index - 1)] <= rx; // insert next data bit into rx_data
                     calculated_parity_bit <= calculated_parity_bit ^ rx; // flip parity bit with new '1'
                     counter <= 0;
                     if (bit_index < data_bits - 1) begin
