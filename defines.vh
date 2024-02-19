@@ -1,3 +1,6 @@
+`ifndef DEFINES_VH_
+`define DEFINES_VH_
+
 typedef enum {BAUD_9600, BAUD_19200, BAUD_38400, BAUD_57600, BAUD_115200} baud_rate_t;
 typedef enum {DATA_BITS_5, DATA_BITS_6, DATA_BITS_7, DATA_BITS_8} data_bits_t;
 typedef enum {STOP_BITS_1, STOP_BITS_1_5, STOP_BITS_2} stop_bits_t;
@@ -23,3 +26,5 @@ typedef struct {
     prescaler_t prescaler;
     bit_order_t bit_order;
 } spi_config_t;
+
+`endif
