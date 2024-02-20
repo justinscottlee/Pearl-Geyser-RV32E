@@ -54,7 +54,7 @@ always @ (posedge clk) begin
                         state <= TRANSFER;
                     end
                     counter <= 0;
-                    rx_data = 32'd0;
+                    rx_data <= 32'd0;
                 end
             end
             START_DELAY: begin
