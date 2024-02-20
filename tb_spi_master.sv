@@ -22,8 +22,8 @@ always #10 clk = ~clk;
 //always #7.5 miso = ~miso;
 
 initial begin
-    $dumpfile("tb_uart.vcd");
-    $dumpvars(0, tb_uart);
+    $dumpfile("tb_spi_master.vcd");
+    $dumpvars(0, tb_spi_master);
     clk = 1;
     rst_n = 0;
     tx_start = 0;
