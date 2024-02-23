@@ -3,7 +3,7 @@
 module uart_transmitter #(
     parameter CLK_FREQ = 1843200
 )(
-    input logic clk, rst_n,       // system clock and active low reset
+    input logic clk, rst_n,     // system clock and active low reset
     input logic tx_start,       // active high, start transmission
     input logic [7:0] tx_data,  // data to transmit
     output logic tx,            // serial data output
@@ -45,7 +45,7 @@ always_comb begin
     data_bits = uart_config.data_bits + 5; // data_bits_t enum starts with 5
 end
 
-always_ff @(posedge clk) begin
+always_ff @ (posedge clk) begin
     if (!rst_n) begin
         tx <= 1'b1; // set tx to 1 for idle
         state <= IDLE;

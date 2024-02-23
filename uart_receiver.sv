@@ -3,7 +3,7 @@
 module uart_receiver #(
     parameter CLK_FREQ = 1843200
 )(
-    input logic clk, rst_n,       // system clock and active low reset
+    input logic clk, rst_n,     // system clock and active low reset
     input logic rx,             // serial data input
     input logic clear_rx_ready, // active high, clear the rx_ready signal after the data has been read
     output logic rx_ready,      // active high, received data is ready to be read
@@ -47,7 +47,7 @@ always_comb begin
     data_bits = uart_config.data_bits + 5; // data_bits_t enum starts with 5
 end
 
-always_ff @(posedge clk) begin
+always_ff @ (posedge clk) begin
     if (!rst_n) begin
         // reset all outputs and enter idle state
         rx_ready <= 1'b0;
